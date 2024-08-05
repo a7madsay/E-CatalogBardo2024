@@ -3,186 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Catalogue Bardo 2024</title>
+    <title>Vertical Image Scroll</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            overflow: hidden;
             background-color: #4a90e2;
             background-image: radial-gradient(circle, #4a90e2 0%, #1c3c74 100%);
             font-family: Arial, sans-serif;
         }
 
-        .book-container {
-            width: 90%;
-            max-width: 800px;
-            height: auto;
-            aspect-ratio: 4 / 3;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .book {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            perspective: 1000px;
-        }
-
-        .page {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            transition: transform 1s ease, opacity 1s ease;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-        }
-
-        .page img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border: 5px solid #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .page-hidden {
-            transform: rotateY(-180deg);
-            opacity: 0;
-        }
-
-        .page-active {
-            transform: rotateY(0);
-            opacity: 1;
-            z-index: 1;
-        }
-
-        .page-previous {
-            transform: rotateY(180deg);
-            opacity: 0;
-            z-index: 0;
-        }
-
-        .controls {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
+        .gallery-container {
             display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            box-sizing: border-box;
-            opacity: 1;
-            transition: opacity 0.5s ease;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
         }
 
-        .controls button {
-            padding: 10px 20px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .controls button:hover {
-            background-color: #555;
-        }
-
-        .controls button:disabled {
-            background-color: #aaa;
-            cursor: not-allowed;
+        .gallery-container img {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            scroll-snap-align: start;
         }
     </style>
 </head>
 <body>
-    <div class="book-container">
-        <div class="book">
-            <div class="page page-active"><img src="images/image1.jpg" alt="Image 1"></div>
-            <div class="page page-hidden"><img src="images/image2.jpg" alt="Image 2"></div>
-            <div class="page page-hidden"><img src="images/image3.jpg" alt="Image 3"></div>
-            <div class="page page-hidden"><img src="images/image4.jpg" alt="Image 4"></div>
-            <div class="page page-hidden"><img src="images/image5.jpg" alt="Image 5"></div>
-            <div class="page page-hidden"><img src="images/image6.jpg" alt="Image 6"></div>
-            <div class="page page-hidden"><img src="images/image7.jpg" alt="Image 7"></div>
-            <div class="page page-hidden"><img src="images/image8.jpg" alt="Image 8"></div>
-            <div class="page page-hidden"><img src="images/image9.jpg" alt="Image 9"></div>
-            <div class="page page-hidden"><img src="images/image10.jpg" alt="Image 10"></div>
-            <div class="page page-hidden"><img src="images/image11.jpg" alt="Image 11"></div>
-        </div>
-        <div class="controls" id="controls">
-            <button id="prevBtn" disabled>Kembali</button>
-            <button id="nextBtn">Selanjutnya</button>
-        </div>
+    <div class="gallery-container">
+        <img src="images/image1.jpg" alt="Image 1">
+        <img src="images/image2.jpg" alt="Image 2">
+        <img src="images/image3.jpg" alt="Image 3">
+        <img src="images/image4.jpg" alt="Image 4">
+        <img src="images/image5.jpg" alt="Image 5">
+        <img src="images/image6.jpg" alt="Image 6">
+        <img src="images/image7.jpg" alt="Image 7">
+        <img src="images/image8.jpg" alt="Image 8">
+        <img src="images/image9.jpg" alt="Image 9">
+        <img src="images/image10.jpg" alt="Image 10">
+        <img src="images/image11.jpg" alt="Image 11">
     </div>
-
-    <script>
-        let currentPage = 0;
-        const pages = document.querySelectorAll('.page');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const controls = document.getElementById('controls');
-        let timeout;
-
-        function updatePage() {
-            pages.forEach((page, index) => {
-                page.classList.remove('page-active', 'page-hidden', 'page-previous');
-                if (index === currentPage) {
-                    page.classList.add('page-active');
-                } else if (index < currentPage) {
-                    page.classList.add('page-previous');
-                } else {
-                    page.classList.add('page-hidden');
-                }
-            });
-
-            prevBtn.disabled = currentPage === 0;
-            nextBtn.disabled = currentPage === pages.length - 1;
-        }
-
-        function showControls() {
-            controls.style.opacity = '1';
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                controls.style.opacity = '0';
-            }, 1000);
-        }
-
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < pages.length - 1) {
-                currentPage++;
-                updatePage();
-                showControls();
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 0) {
-                currentPage--;
-                updatePage();
-                showControls();
-            }
-        });
-
-        document.addEventListener('mousemove', showControls);
-        document.addEventListener('touchstart', showControls);
-
-        updatePage();
-        showControls();
-    </script>
 </body>
 </html>
