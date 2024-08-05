@@ -13,25 +13,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #4a90e2; /* Warna latar belakang dasar */
-            background-image: radial-gradient(circle, #4a90e2 0%, #1c3c74 100%); /* Gradasi warna */
-            font-family: Arial, sans-serif;
+            background-color: #4a90e2;
+            background-image: radial-gradient(circle, #4a90e2 0%, #1c3c74 100%);
+            font-family: 'Georgia', serif;
         }
 
         .book-container {
             width: 90%;
             max-width: 800px;
             height: auto;
-            aspect-ratio: 4 / 3; /* Menjaga rasio tampilan */
+            aspect-ratio: 4 / 3;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Efek bayangan pada buku */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 15px solid #8B4513; /* Border seperti buku dengan warna kayu */
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #FFF8DC; /* Warna latar belakang gambar */
         }
 
         .book {
             width: 100%;
             height: 100%;
             position: relative;
-            overflow: hidden;
         }
 
         .page {
@@ -40,26 +43,27 @@
             position: absolute;
             left: 0;
             top: 0;
-            transition: transform 1s ease;
+            transition: transform 1s ease, opacity 1s ease;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .page-active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page-previous {
+            opacity: 1;
+            transform: translateX(-100%);
         }
 
         .page img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Gambar akan di-scaling agar tidak terpotong */
-            border-radius: 10px; /* Sudut gambar melengkung agar lebih menarik */
-        }
-
-        .page-hidden {
-            transform: translateX(100%);
-        }
-
-        .page-active {
-            transform: translateX(0);
-        }
-
-        .page-previous {
-            transform: translateX(-100%);
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Bayangan gambar agar terlihat terangkat */
         }
 
         .controls {
@@ -97,16 +101,16 @@
     <div class="book-container">
         <div class="book">
             <div class="page page-active"><img src="images/image1.jpg" alt="Image 1"></div>
-            <div class="page page-hidden"><img src="images/image2.jpg" alt="Image 2"></div>
-            <div class="page page-hidden"><img src="images/image3.jpg" alt="Image 3"></div>
-            <div class="page page-hidden"><img src="images/image4.jpg" alt="Image 4"></div>
-            <div class="page page-hidden"><img src="images/image5.jpg" alt="Image 5"></div>
-            <div class="page page-hidden"><img src="images/image6.jpg" alt="Image 6"></div>
-            <div class="page page-hidden"><img src="images/image7.jpg" alt="Image 7"></div>
-            <div class="page page-hidden"><img src="images/image8.jpg" alt="Image 8"></div>
-            <div class="page page-hidden"><img src="images/image9.jpg" alt="Image 9"></div>
-            <div class="page page-hidden"><img src="images/image10.jpg" alt="Image 10"></div>
-            <div class="page page-hidden"><img src="images/image11.jpg" alt="Image 11"></div>
+            <div class="page"><img src="images/image2.jpg" alt="Image 2"></div>
+            <div class="page"><img src="images/image3.jpg" alt="Image 3"></div>
+            <div class="page"><img src="images/image4.jpg" alt="Image 4"></div>
+            <div class="page"><img src="images/image5.jpg" alt="Image 5"></div>
+            <div class="page"><img src="images/image6.jpg" alt="Image 6"></div>
+            <div class="page"><img src="images/image7.jpg" alt="Image 7"></div>
+            <div class="page"><img src="images/image8.jpg" alt="Image 8"></div>
+            <div class="page"><img src="images/image9.jpg" alt="Image 9"></div>
+            <div class="page"><img src="images/image10.jpg" alt="Image 10"></div>
+            <div class="page"><img src="images/image11.jpg" alt="Image 11"></div>
         </div>
         <div class="controls">
             <button id="prevBtn" disabled>Kembali</button>
@@ -122,13 +126,11 @@
 
         function updatePage() {
             pages.forEach((page, index) => {
-                page.classList.remove('page-active', 'page-hidden', 'page-previous');
+                page.classList.remove('page-active', 'page-previous');
                 if (index === currentPage) {
                     page.classList.add('page-active');
                 } else if (index < currentPage) {
                     page.classList.add('page-previous');
-                } else {
-                    page.classList.add('page-hidden');
                 }
             });
 
